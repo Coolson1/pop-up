@@ -18,8 +18,11 @@ export default async function TicketPage({
 
   if (!order) {
     return (
-      <main className="max-w-md mx-auto p-6 text-center">
-        <h1 className="text-2xl font-semibold">Ticket not found</h1>
+      <main className="max-w-md mx-auto px-6 py-12 text-center">
+        <div className="bg-red-50 rounded-xl p-8 border border-red-200">
+          <h1 className="text-2xl font-bold text-red-700 mb-2">Ticket Not Found</h1>
+          <p className="text-red-600">This order code doesn&apos;t exist</p>
+        </div>
       </main>
     );
   }
