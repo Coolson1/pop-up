@@ -15,7 +15,10 @@ export function Cart() {
     return () => window.removeEventListener("cart:change", sync);
   }, []);
 
-  const subtotal = items.reduce((sum, i) => sum + i.price_cents * i.qty);
+  const subtotal = items.reduce(
+  (sum, i) => sum + i.price_cents * i.qty,
+  0
+);
 
   if (items.length === 0) {
     return (

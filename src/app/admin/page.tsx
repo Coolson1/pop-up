@@ -1,37 +1,78 @@
-import { db } from "@/lib/notifier";
+"use client";
 
-export const dynamic = "force-dynamic";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getUser, signOut } from "@/lib/auth";
 
-export default async function AdminPage() {
-  const { data: orders } = await db
-    .from("orders")
-    .select("id, code, phone, total_cents, status, created_at")
-    .eq("status", "paid")
-    .order("created_at", { ascending: false });
+type Order = {
+  id: string;
+  code: string;
+  phone: string;
+  total_cents: number;
+  status: string;
+  created_at: string;
+};
 
-  const orderIds = (orders ?? []).map((o) => o.id);
+export default function AdminPage() {
+  const router = useRouter();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [prepList, setPrepList] = useState<[string, number][]>([]);
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
-  const itemsResult = orderIds.length
-    ? await db
-        .from("order_items")
-        .select("order_id, name, qty")
-        .in("order_id", orderIds)
-    : { data: [] };
+  useEffect(() => {
+    checkAuthAndLoadData();
+  }, []);
 
-  const items = itemsResult.data ?? [];
+  async function checkAuthAndLoadData() {
+    try {
+      const { data, error } = await getUser();
 
-  const prepTotals = new Map<string, number>();
-  for (const item of items) {
-    prepTotals.set(item.name, (prepTotals.get(item.name) ?? 0) + item.qty);
+      if (error || !data.user) {
+        router.push("/admin/login");
+        return;
+      }
+
+      setAuthenticated(true);
+
+      // Fetch admin data from API route
+      const res = await fetch("/api/admin/orders");
+      const { orders: ordersData, prepList: prepData } = await res.json();
+
+      setOrders(ordersData);
+      setPrepList(prepData);
+    } catch {
+      router.push("/admin/login");
+    } finally {
+      setLoading(false);
+    }
   }
 
-  const prepList = Array.from(prepTotals.entries()).sort(
-    (a, b) => b[1] - a[1]
-  );
+  async function handleLogout() {
+    await signOut();
+    router.push("/admin/login");
+  }
+
+  if (!authenticated || loading) {
+    return (
+      <main className="max-w-3xl mx-auto p-6">
+        <p>Loading...</p>
+      </main>
+    );
+  }
 
   return (
     <main className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Prep List</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Prep List</h1>
+        <button
+          onClick={handleLogout}
+          className="text-sm bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg"
+        >
+          Logout
+        </button>
+      </div>
+
       {prepList.length === 0 ? (
         <p className="text-gray-500">No paid orders yet.</p>
       ) : (
@@ -46,11 +87,11 @@ export default async function AdminPage() {
       )}
 
       <h2 className="text-xl font-semibold mt-10 mb-3">Paid Orders</h2>
-      {(orders ?? []).length === 0 ? (
+      {orders.length === 0 ? (
         <p className="text-gray-500 text-sm">Nothing yet.</p>
       ) : (
         <ul className="space-y-2">
-          {(orders ?? []).map((o) => (
+          {orders.map((o) => (
             <li
               key={o.id}
               className="bg-white rounded-lg border border-gray-100 p-3 flex justify-between text-sm"

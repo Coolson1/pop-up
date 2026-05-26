@@ -31,6 +31,13 @@ create table if not exists order_items (
   qty int not null
 );
 
+create table if not exists admins (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  email text not null unique,
+  created_at timestamptz not null default now()
+);
+
 insert into menus (served_on, cutoff_at)
 values (current_date, (current_date::timestamptz + interval '17 hours'))
 on conflict (served_on) do nothing;
