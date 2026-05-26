@@ -24,7 +24,7 @@ export default async function Page() {
   const now = new Date();
   const cutoff = new Date(menu.cutoff_at);
 
-  if (now < cutoff) {
+  if (now > cutoff) {
     const { data: items } = await db
       .from("menu_items")
       .select("id, name, price_cents")
