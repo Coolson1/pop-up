@@ -1,7 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 if (!url || !anonKey) {
   throw new Error(
@@ -38,6 +39,6 @@ export async function getUser() {
 }
 
 export async function isAdmin(userId: string, email: string) {
-  const { data } = await createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY!).from("admins").select("id").eq("user_id", userId).eq("email", email).maybeSingle();
+  const { data } = await createClient(url, serviceRoleKey).from("admins").select("id").eq("user_id", userId).eq("email", email).maybeSingle();
   return !!data;
 }
