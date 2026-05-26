@@ -10,10 +10,15 @@ type Body = {
 };
 
 export async function POST(req: Request) {
-  const body = (await req.json()) as Body;
+  let body: Body;
+  try {
+    body = (await req.json()) as Body;
+  } catch (e) {
+    return NextResponse.json({ error: "Invalid JSON in request body" }, { status: 400 });
+  }
 
   if (!body.phone || !body.items?.length) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    return NextResponse.json({ error: "Missing phone or items" }, { status: 400 });
   }
 
   const total = body.items.reduce(
@@ -37,6 +42,7 @@ export async function POST(req: Request) {
     .single();
 
   if (error || !order) {
+    console.error("Order creation error:", error);
     return NextResponse.json(
       { error: "Could not create order" },
       { status: 500 }
@@ -53,11 +59,20 @@ export async function POST(req: Request) {
     }))
   );
 
-  const checkout = await createCheckout({
-    amount: total,
-    phone: body.phone,
-    reference: order.reference,
-  });
+  let checkout;
+  try {
+    checkout = await createCheckout({
+      amount: total,
+      phone: body.phone,
+      reference: order.reference,
+    });
+  } catch (e) {
+    console.error("Checkout creation error:", e);
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Payment provider error" },
+      { status: 500 }
+    );
+  }
 
   return NextResponse.json({
     code: order.code,

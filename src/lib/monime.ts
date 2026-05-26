@@ -27,16 +27,20 @@ export async function createCheckout(input: CreateCheckoutInput) {
     }),
   });
 
+  const text = await res.text();
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`monime ${res.status}: ${text}`);
+    throw new Error(`monime ${res.status}: ${text || "Unknown error"}`);
   }
 
-  const data = await res.json();
-  return {
-    id: data.id as string,
-    redirect_url: data.redirect_url as string,
-  };
+  try {
+    const data = JSON.parse(text);
+    return {
+      id: data.id as string,
+      redirect_url: data.redirect_url as string,
+    };
+  } catch (e) {
+    throw new Error(`Invalid JSON response from monime: ${text}`);
+  }
 }
 
 export function verifyWebhook(
