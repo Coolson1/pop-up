@@ -1,6 +1,5 @@
 import { db } from "@/lib/notifier";
 import { MenuCard } from "@/components/MenuCard";
-import { Cart } from "@/components/Cart";
 import { Navbar } from "@/components/Navbar";
 
 export const dynamic = "force-dynamic";
@@ -60,13 +59,10 @@ export default async function Page() {
                 </p>
               </div>
             </div>
-            <div className="grid gap-6 lg:grid-cols-[1.25fr_0.85fr]">
-              <div className="grid sm:grid-cols-2 gap-6">
-                {items?.map((item) => (
-                  <MenuCard key={item.id} item={item} />
-                ))}
-              </div>
-              <Cart />
+            <div className="grid gap-6 sm:grid-cols-2">
+              {items?.map((item) => (
+                <MenuCard key={item.id} item={item} />
+              ))}
             </div>
           </section>
         </main>
