@@ -67,7 +67,7 @@ export default function CheckoutPage() {
       <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 mb-6">
         <h2 className="font-semibold text-gray-700 mb-3">Order Summary</h2>
         <ul className="space-y-3 mb-4">
-          {items.map((i) => (
+          {items?.map((i) => (
             <li key={i.id} className="flex justify-between py-2 border-b border-gray-100 last:border-0">
               <span className="text-gray-700">
                 <span className="font-medium">{i.qty}×</span> {i.name}

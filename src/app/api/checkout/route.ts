@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing phone or items" }, { status: 400 });
   }
 
-  const total = body.items.reduce(
+  const total = (body.items ?? []).reduce(
     (s, i) => s + i.price_cents * i.qty,
     0
   );
@@ -61,10 +61,16 @@ export async function POST(req: Request) {
 
   let checkout;
   try {
+    console.log("[Checkout API] Creating Monime session with items:", JSON.stringify(body.items));
     checkout = await createCheckout({
-      amount: total,
+      name: body.phone, // Using phone as name since we don't have a customer name
       phone: body.phone,
       reference: order.reference,
+      lineItems: body.items.map(i => ({
+        name: i.name,
+        quantity: i.qty,
+        price: i.price_cents
+      })),
     });
   } catch (e) {
     console.error("Checkout creation error:", e);

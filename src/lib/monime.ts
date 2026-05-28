@@ -6,29 +6,47 @@ const WEBHOOK_SECRET = process.env.MONIME_WEBHOOK_SECRET!;
 
 const BASE = "https://api.monime.io";
 
+type LineItem = {
+  name: string;
+  quantity: number;
+  price: number;
+};
+
 type CreateCheckoutInput = {
-  amount: number;
+  name: string;
   phone: string;
   reference: string;
+  lineItems: LineItem[];
 };
 
 export async function createCheckout(input: CreateCheckoutInput) {
+  if (!input.lineItems || input.lineItems.length === 0) {
+    throw new Error("Monime checkout requires at least one line item");
+  }
+
   const res = await fetch(`${BASE}/v1/checkout-sessions`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${ACCESS_TOKEN}`,
       "Monime-Space-Id": SPACE_ID,
+      "Idempotency-Key": crypto.randomUUID(),
       "content-type": "application/json",
     },
     body: JSON.stringify({
-      amount: { currency: "SLE", value: input.amount },
+      name: input.name,
       reference: input.reference,
-      customer: { phone: input.phone },
+      lineItems: (input.lineItems ?? []).map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: { currency: "SLE", value: item.price },
+        type: "custom",
+      })),
     }),
   });
 
   const text = await res.text();
   if (!res.ok) {
+    console.error(`[Monime API Error] Status: ${res.status}, Response: ${text}`);
     throw new Error(`monime ${res.status}: ${text || "Unknown error"}`);
   }
 

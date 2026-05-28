@@ -36,7 +36,7 @@ export function Cart() {
     <aside className="bg-white rounded-xl p-5 shadow-lg border border-gray-100 sticky top-4 h-fit">
       <h2 className="font-bold text-lg text-gray-800 mb-4">Your Order</h2>
       <ul className="space-y-3">
-        {items.map((i) => (
+        {items?.map((i) => (
           <li key={i.id} className="flex items-center justify-between text-sm bg-gray-50 rounded-lg p-3">
             <span className="flex-1 pr-2 font-medium text-gray-700">{i.name}</span>
             <div className="flex items-center gap-2">

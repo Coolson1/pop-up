@@ -39,7 +39,7 @@ export function addToCart(item: {
 }
 
 export function setQty(id: string, qty: number) {
-  const cart = readCart()
+  const cart = (readCart() ?? [])
     .map((c) => (c.id === id ? { ...c, qty } : c))
     .filter((c) => c.qty > 0);
   writeCart(cart);

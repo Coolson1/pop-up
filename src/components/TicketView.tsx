@@ -47,7 +47,7 @@ export function TicketView({
           {isPaid ? "✓ Paid — See you at pickup!" : "⏳ Waiting for payment…"}
         </div>
         <div className="mt-6 space-y-3">
-          {items.map((i, idx) => (
+          {items?.map((i, idx) => (
             <div key={idx} className="flex justify-between py-2 border-b border-gray-100 last:border-0">
               <span className="text-gray-700">
                 <span className="font-medium">{i.qty}×</span> {i.name}

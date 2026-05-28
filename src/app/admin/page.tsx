@@ -88,7 +88,7 @@ export default function AdminPage() {
           </div>
         ) : (
           <ul className="bg-white rounded-xl border border-gray-100 divide-y shadow-sm overflow-hidden">
-            {prepList.map(([name, qty]) => (
+            {prepList?.map(([name, qty]) => (
               <li key={name} className="flex justify-between items-center p-4 hover:bg-gray-50 transition-colors">
                 <span className="font-medium text-gray-800">{name}</span>
                 <span className="bg-amber-100 text-amber-700 font-mono font-bold px-3 py-1 rounded-full">×{qty}</span>
@@ -104,7 +104,7 @@ export default function AdminPage() {
           <p className="text-gray-500 text-sm bg-gray-50 rounded-lg p-4">Nothing yet.</p>
         ) : (
           <ul className="space-y-3">
-            {orders.map((o) => (
+            {orders?.map((o) => (
               <li
                 key={o.id}
                 className="bg-white rounded-lg border border-gray-100 p-4 flex justify-between items-center text-sm hover:shadow-sm transition-shadow"
