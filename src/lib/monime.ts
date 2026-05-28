@@ -3,6 +3,8 @@ import crypto from "node:crypto";
 const ACCESS_TOKEN = process.env.MONIME_ACCESS_TOKEN!;
 const SPACE_ID = process.env.MONIME_SPACE_ID!;
 const WEBHOOK_SECRET = process.env.MONIME_WEBHOOK_SECRET!;
+const MONIME_VERSION = process.env.MONIME_VERSION || "caph.2025-08-23";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "";
 
 const BASE = "https://api.monime.io";
 
@@ -30,16 +32,22 @@ export async function createCheckout(input: CreateCheckoutInput) {
       Authorization: `Bearer ${ACCESS_TOKEN}`,
       "Monime-Space-Id": SPACE_ID,
       "Idempotency-Key": crypto.randomUUID(),
+      "Monime-Version": MONIME_VERSION,
       "content-type": "application/json",
     },
     body: JSON.stringify({
       name: input.name,
       reference: input.reference,
-      lineItems: (input.lineItems ?? []).map(item => ({
+      description: `Order ${input.reference}`,
+      callbackState: input.phone,
+      successUrl: APP_URL ? `${APP_URL.replace(/\/$/, "")}/ticket/${input.reference}` : undefined,
+      cancelUrl: APP_URL ? `${APP_URL.replace(/\/$/, "")}/` : undefined,
+      lineItems: (input.lineItems ?? []).map((item) => ({
         name: item.name,
         quantity: item.quantity,
         price: { currency: "SLE", value: item.price },
         type: "custom",
+        reference: input.reference,
       })),
     }),
   });
@@ -52,9 +60,12 @@ export async function createCheckout(input: CreateCheckoutInput) {
 
   try {
     const data = JSON.parse(text);
+    // API returns wrapper { success, messages, result }
+    const result = data.result ?? data;
     return {
-      id: data.id as string,
-      redirect_url: data.redirect_url as string,
+      raw: data,
+      id: result.id as string,
+      redirect_url: result.redirectUrl || result.redirect_url || result.redirect || null,
     };
   } catch (e) {
     throw new Error(`Invalid JSON response from monime: ${text}`);
