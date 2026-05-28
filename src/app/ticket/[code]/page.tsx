@@ -18,10 +18,12 @@ export default async function TicketPage({
 
   if (!order) {
     return (
-      <main className="max-w-md mx-auto px-6 py-12 text-center">
-        <div className="bg-red-50 rounded-xl p-8 border border-red-200">
-          <h1 className="text-2xl font-bold text-red-700 mb-2">Ticket Not Found</h1>
-          <p className="text-red-600">This order code doesn&apos;t exist</p>
+      <main className="min-h-screen flex items-center justify-center px-6 py-16">
+        <div className="max-w-md rounded-[2rem] bg-white/95 border border-gray-100 shadow-2xl p-10 text-center">
+          <h1 className="text-3xl font-black text-gray-900 mb-4">Ticket Not Found</h1>
+          <p className="text-gray-500 leading-relaxed">
+            We couldn&apos;t locate an order for that code. Please verify your pickup code or return to the menu.
+          </p>
         </div>
       </main>
     );

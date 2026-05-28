@@ -33,44 +33,41 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="max-w-md mx-auto px-6 py-12 flex items-center justify-center min-h-screen">
-      <div className="w-full">
+    <main className="min-h-screen bg-[#F7F4F0] px-6 py-16 flex items-center justify-center">
+      <div className="w-full max-w-lg rounded-[2rem] bg-white/95 border border-gray-100 shadow-2xl p-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Admin Login</h1>
-          <p className="text-gray-500">Access the kitchen management portal</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-gray-400 mb-3">Admin Access</p>
+          <h1 className="text-4xl font-black text-gray-900">Kitchen Dashboard</h1>
+          <p className="mt-3 text-gray-500">Sign in to manage orders, prep lists, and daily menus.</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-5">
-          <div className="space-y-2">
-            <label className="block">
-              <span className="text-sm font-medium text-gray-700">Email</span>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                placeholder="admin@example.com"
-                required
-              />
-            </label>
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-3xl border border-gray-200 bg-gray-50 px-5 py-4 text-gray-900 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
+              placeholder="admin@example.com"
+              required
+            />
           </div>
 
-          <div className="space-y-2">
-            <label className="block">
-              <span className="text-sm font-medium text-gray-700">Password</span>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                placeholder="••••••••"
-                required
-              />
-            </label>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-3xl border border-gray-200 bg-gray-50 px-5 py-4 text-gray-900 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
+              placeholder="••••••••"
+              required
+            />
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-sm p-4 rounded-lg">
+            <div className="rounded-3xl border border-red-100 bg-red-50 px-5 py-4 text-sm text-red-700">
               {error}
             </div>
           )}
@@ -78,14 +75,14 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-amber-600 to-orange-500 text-white py-3 rounded-lg font-semibold hover:from-amber-700 hover:to-orange-600 disabled:opacity-50 transition-all shadow-md hover:shadow-lg active:scale-95"
+            className="w-full rounded-3xl bg-gray-900 px-6 py-4 text-sm font-black uppercase tracking-[0.2em] text-white shadow-xl shadow-gray-200 transition hover:bg-amber-600 disabled:opacity-50 disabled:pointer-events-none"
           >
-            {loading ? "Logging in..." : "Sign In"}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
-        <p className="text-sm text-gray-500 mt-6 text-center">
-          Contact your administrator for credentials
+        <p className="mt-8 text-center text-sm text-gray-500">
+          For kitchen operations only. Keep credentials secure.
         </p>
       </div>
     </main>

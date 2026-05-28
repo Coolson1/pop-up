@@ -59,61 +59,58 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="max-w-md mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 bg-gradient-to-r from-amber-600 to-orange-500 bg-clip-text text-transparent">
+    <main className="max-w-md mx-auto px-6 py-12">
+      <h1 className="text-4xl font-black text-gray-900 mb-8 tracking-tight">
         Checkout
       </h1>
 
-      <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 mb-6">
-        <h2 className="font-semibold text-gray-700 mb-3">Order Summary</h2>
-        <ul className="space-y-3 mb-4">
+      <div className="bg-white rounded-3xl p-6 shadow-xl border border-gray-100 mb-8">
+        <h2 className="font-bold text-gray-400 uppercase tracking-widest text-xs mb-4">Order Summary</h2>
+        <ul className="space-y-4 mb-6">
           {items?.map((i) => (
-            <li key={i.id} className="flex justify-between py-2 border-b border-gray-100 last:border-0">
-              <span className="text-gray-700">
-                <span className="font-medium">{i.qty}×</span> {i.name}
+            <li key={i.id} className="flex justify-between py-3 border-b border-gray-50 last:border-0">
+              <span className="text-gray-800 font-medium">
+                <span className="text-gray-400 mr-2">{i.qty}×</span> {i.name}
               </span>
-              <span className="font-medium text-amber-600">
+              <span className="font-bold text-gray-900">
                 NLe {((i.price_cents * i.qty) / 100).toFixed(2)}
               </span>
             </li>
           ))}
         </ul>
-        <div className="pt-3 border-t border-gray-200 flex justify-between items-center">
-          <span className="font-semibold text-gray-800">Total</span>
-          <span className="font-bold text-xl text-amber-600">
+        <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
+          <span className="font-bold text-gray-400 uppercase tracking-widest text-xs">Total</span>
+          <span className="font-black text-2xl text-gray-900">
             NLe {(total / 100).toFixed(2)}
           </span>
         </div>
       </div>
 
-      <form onSubmit={pay} className="space-y-5">
+      <form onSubmit={pay} className="space-y-6">
         <div className="space-y-2">
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">Mobile money number</span>
+            <span className="text-sm font-bold text-gray-700 ml-1">Mobile money number</span>
             <input
               type="tel"
               required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+232..."
-              className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+              className="mt-2 w-full rounded-2xl border border-gray-200 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-gray-50/50 transition-all"
             />
           </label>
         </div>
-
+        <button
+          disabled={loading}
+          className="w-full bg-gray-900 text-white rounded-2xl py-4 font-bold hover:bg-amber-600 transition-all duration-300 shadow-lg shadow-gray-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
+        >
+          {loading ? "Processing..." : "Pay Now"}
+        </button>
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-sm p-3 rounded-lg">
+          <div className="p-4 bg-red-50 text-red-600 text-sm rounded-2xl border border-red-100 text-center font-medium">
             {error}
           </div>
         )}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-gradient-to-r from-amber-600 to-orange-500 text-white rounded-lg py-3.5 font-semibold hover:from-amber-700 hover:to-orange-600 disabled:opacity-50 transition-all shadow-md hover:shadow-lg active:scale-95"
-        >
-          {loading ? "Starting payment…" : `Pay NLe ${(total / 100).toFixed(2)}`}
-        </button>
       </form>
     </main>
   );

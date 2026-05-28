@@ -22,34 +22,41 @@ export function Cart() {
 
   if (items.length === 0) {
     return (
-      <aside className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-5 border border-amber-100 sticky top-4 h-fit">
-        <h2 className="font-bold text-lg text-amber-800 mb-3">Your Order</h2>
-        <div className="text-center py-8">
-          <p className="text-gray-500 text-sm">Your cart is empty</p>
-          <p className="text-amber-600 text-xs mt-1">Add items from the menu to get started</p>
+      <aside className="bg-white rounded-3xl p-8 border border-gray-100 sticky top-4 h-fit shadow-sm">
+        <div className="text-center py-12">
+          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
+          <h2 className="font-bold text-xl text-gray-900 mb-2">Your Order</h2>
+          <p className="text-gray-500 text-sm">Your cart is currently empty</p>
         </div>
       </aside>
     );
   }
 
   return (
-    <aside className="bg-white rounded-xl p-5 shadow-lg border border-gray-100 sticky top-4 h-fit">
-      <h2 className="font-bold text-lg text-gray-800 mb-4">Your Order</h2>
-      <ul className="space-y-3">
+    <aside className="bg-white rounded-3xl p-6 shadow-xl border border-gray-100 sticky top-4 h-fit">
+      <h2 className="font-black text-xl text-gray-900 mb-6 flex items-center gap-2">
+        Your Order
+        <span className="text-xs font-medium bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">{items.length}</span>
+      </h2>
+      <ul className="space-y-4">
         {items?.map((i) => (
-          <li key={i.id} className="flex items-center justify-between text-sm bg-gray-50 rounded-lg p-3">
-            <span className="flex-1 pr-2 font-medium text-gray-700">{i.name}</span>
-            <div className="flex items-center gap-2">
+          <li key={i.id} className="flex items-center justify-between text-sm bg-gray-50/50 rounded-2xl p-4 hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200">
+            <span className="flex-1 pr-2 font-bold text-gray-800">{i.name}</span>
+            <div className="flex items-center gap-3">
               <button
-                className="w-7 h-7 rounded-lg bg-white border border-gray-200 hover:bg-gray-100 font-bold text-gray-600 transition-colors"
+                className="w-8 h-8 rounded-full bg-white border border-gray-200 hover:border-amber-400 hover:text-amber-600 font-bold text-gray-500 transition-all flex items-center justify-center"
                 onClick={() => setQty(i.id, i.qty - 1)}
                 aria-label={`Decrease ${i.name}`}
               >
                 –
               </button>
-              <span className="w-6 text-center font-semibold">{i.qty}</span>
+              <span className="w-5 text-center font-black text-gray-900">{i.qty}</span>
               <button
-                className="w-7 h-7 rounded-lg bg-amber-100 border border-amber-200 hover:bg-amber-200 font-bold text-amber-700 transition-colors"
+                className="w-8 h-8 rounded-full bg-gray-900 text-white hover:bg-amber-600 font-bold transition-all flex items-center justify-center shadow-md"
                 onClick={() => setQty(i.id, i.qty + 1)}
                 aria-label={`Increase ${i.name}`}
               >
@@ -59,17 +66,17 @@ export function Cart() {
           </li>
         ))}
       </ul>
-      <div className="mt-5 pt-4 border-t border-gray-200 flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-600">Subtotal</span>
-        <span className="font-bold text-lg text-amber-600">
+      <div className="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">
+        <span className="text-sm font-bold text-gray-400 uppercase tracking-wider">Subtotal</span>
+        <span className="font-black text-2xl text-gray-900">
           NLe {(subtotal / 100).toFixed(2)}
         </span>
       </div>
       <button
         onClick={() => router.push("/checkout")}
-        className="mt-5 w-full bg-gradient-to-r from-amber-600 to-orange-500 text-white rounded-lg py-3 font-semibold hover:from-amber-700 hover:to-orange-600 transition-all shadow-md hover:shadow-lg active:scale-95"
+        className="mt-6 w-full bg-gray-900 text-white rounded-2xl py-4 font-bold hover:bg-amber-600 transition-all duration-300 shadow-lg shadow-gray-200 hover:shadow-amber-200 active:scale-95"
       >
-        Checkout • NLe {(subtotal / 100).toFixed(2)}
+        Complete Order
       </button>
     </aside>
   );
