@@ -50,7 +50,7 @@ export default function AdminPage() {
 
   async function handleLogout() {
     await signOut();
-    router.push("/admin/login");
+    router.push("/");
   }
 
   if (!authenticated || loading) {
